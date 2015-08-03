@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function yo_dawg() {
+    echo 'I heard you like' 
+    echo 'yo/dawg' 
+    echo 'so I put a' 
+    echo 'yo_dawg' 
+    echo 'in your' 
+    echo 'yo/dawg'
+    echo 'so you can run' 
+    echo 'yo_dawg'
+    echo 'while you run' 
+    echo 'yo/dawg.'
+}
+
+RC_LUA=~/.config/awesome/rc.test.lua
+test -f $RC_LUA || /bin/cp /etc/xdg/awesome/rc.lua $RC_LUA
+
+yo_dawg
+
+pidof Xephyr || { Xephyr -ac -br -noreset -resizeable -screen 800x600 :1 & }
+sleep 1
+DISPLAY=:1.0 awesome -c $RC_LUA
