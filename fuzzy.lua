@@ -1,3 +1,9 @@
+-- muggy.fuzzy
+
+--
+-- This file contains the fuzzy search code shared by many generators.
+--
+
 local fuzzy = { mt = {} }
 
 local decay = 0.05

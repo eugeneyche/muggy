@@ -1,12 +1,19 @@
+-- muggy.generator.multiplex
+
+--
+-- This file contains the multiplex generator, which allows the user to select
+-- between other generators with a single keyword or name.
+--
+
 local wibox = require ('wibox')
 local beautiful = require('beautiful')
 
 local proto = require('muggy.proto')
-local generator = require('muggy.generator')
 local entry = require('muggy.entry')
 local fuzzy = require('muggy.fuzzy')
-
 local common = require('muggy.common')
+
+local generator = require('muggy.generator')
 
 
 local multiplex = { mt = {} }

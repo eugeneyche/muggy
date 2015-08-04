@@ -1,5 +1,12 @@
+-- muggy.generator
+
+--
+-- This file contains the base generator code, used by all other generators.
+--
+
 proto = require('muggy.proto')
 heap = require('muggy.heap')
+
 
 local generator = { mt = {} }
 

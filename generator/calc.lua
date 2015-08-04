@@ -1,10 +1,16 @@
+-- muggi.generator.calc
+
+--
+-- This file contains the generator associated with calculator functionality.
+--
+
 local wibox = require ('wibox')
+
+local common = require('muggy.common')
 
 local proto = require('muggy.proto')
 local generator = require('muggy.generator')
 local entry = require('muggy.entry')
-
-local common = require('muggy.common')
 
 
 local calc = { mt = {} }

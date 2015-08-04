@@ -1,3 +1,9 @@
+-- muggy.heap
+
+--
+-- This file contains the heap code used in sorting entries by the generator.
+--
+
 local heap = { mt = {} }
 
 

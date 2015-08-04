@@ -1,3 +1,10 @@
+-- muggy.lighthouse
+
+--
+-- This file contains the lighthouse code that binds together the prompt and 
+-- entry list.
+--
+
 local capi = {
     client = client,
     mouse = mouse,
@@ -6,18 +13,18 @@ local capi = {
 
 local awful = require('awful')
 local common = require('awful.widget.common')
-local beautiful = require('beautiful')
 local wibox = require ('wibox')
 local keygrabber = require('awful.keygrabber')
+local beautiful = require('beautiful')
 
 local proto = require('muggy.proto')
-
 local prompt = require('muggy.prompt')
 local entry_list = require('muggy.entry_list')
 
 local multiplex = require('muggy.generator.multiplex')
 local shell = require('muggy.generator.shell')
 local calc = require('muggy.generator.calc')
+
 
 local lighthouse = { mt = {} }
 

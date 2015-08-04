@@ -1,7 +1,14 @@
+-- muggy.common
+
+--
+-- This file aggregates common code to be used by submodules.
+--
+
 local wibox = require ('wibox')
 
 local proto = require('muggy.proto')
 local entry = require('muggy.entry')
+
 
 local text_entry = { mt = {} }
 

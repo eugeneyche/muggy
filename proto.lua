@@ -1,4 +1,12 @@
+-- muggy.proto
+
+--
+-- This file contains the code to make Lua a little more object oriented.
+--
+
+
 proto = { mt = {} }
+
 
 function proto.super(cls, inst, ...)
     for k, v in pairs(cls) do

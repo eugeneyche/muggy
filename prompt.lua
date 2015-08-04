@@ -1,3 +1,9 @@
+-- muggy.prompt
+
+--
+-- This file code for the prompt, the place the user enters data.
+--
+
 local capi = {
     client = client,
     mouse = mouse,
@@ -5,8 +11,8 @@ local capi = {
 }
 
 local awful = require("awful")
-local beautiful = require("beautiful")
 local wibox = require("wibox")
+local beautiful = require("beautiful")
 
 local proto = require('muggy.proto')
 

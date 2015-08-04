@@ -1,3 +1,10 @@
+-- muggy.generator.shell
+
+--
+-- This file contains the shell generator, which allows the user to
+-- auto-complete a shell entry with fuzzy search.
+--
+
 local wibox = require ('wibox')
 local beautiful = require ('beautiful')
 

@@ -1,3 +1,9 @@
+-- muggy.entry
+
+--
+-- This file contains base code for a single entry
+--
+
 local proto = require('muggy.proto')
 
 

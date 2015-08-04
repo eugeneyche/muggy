@@ -1,17 +1,25 @@
+-- muggy.entry_list
+
+--
+-- This file contains code for the entry list, a collection of entries that the
+-- user can interact with.
+--
+
 local capi = {
     client = client,
     mouse = mouse,
     screen = screen
 }
 
-local beautiful = require('beautiful')
 local wibox = require('wibox')
+local beautiful = require('beautiful')
 
 local proto = require('muggy.proto')
 
-local entry_list = { mt = {} }
 
+local entry_list = { mt = {} }
 local entries_per_page = 15
+
 
 function entry_list:new(...)
     local theme = beautiful.get()
