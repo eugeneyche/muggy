@@ -4,19 +4,23 @@ local capi = {
     screen = screen
 }
 
-local theme = require("beautiful")
-local wibox = require("wibox")
-local naughty = require("naughty")
+local beautiful = require('beautiful')
+local wibox = require('wibox')
 
-local proto = require('luminous.proto')
+local proto = require('muggy.proto')
 
 local entry_list = { mt = {} }
 
 local entries_per_page = 15
 
 function entry_list:new(...)
+    local theme = beautiful.get()
+    self.bg_normal = theme.lighthouse_bg_normal or
+                     theme.bg_normal
+    self.bg_focus = theme.lighthouse_bg_focus or
+                    theme.bg_focus
     local la = wibox.layout.fixed.vertical()
-    local bgb = wibox.widget.background(la, "#ffff00")
+    local bgb = wibox.widget.background(la, self.bg_normal)
     self.entry_widgets = {}
     self.layout = la
     self.base = bgb
@@ -107,7 +111,7 @@ end
 function entry_list:_make_entry_widget()
     local tb = wibox.widget.textbox('> ')
     local m = wibox.layout.margin(tb, 4, 4, 4, 4)
-    local bgb = wibox.widget.background(m, '#334455')
+    local bgb = wibox.widget.background(m, self.bg_normal)
     local _entry = {
         base = bgb,
         textbox = tb,
@@ -142,10 +146,10 @@ function entry_list:show()
         local entry = self.entry_values[skipped_entries + i]
         self.entry_widgets[i].base:set_widget(entry:get_widget())
         if focus_entry and focus_entry == i then
-            self.entry_widgets[i].base:set_bg('#556677')
+            self.entry_widgets[i].base:set_bg(self.bg_focus)
             entry:hover()
         else
-            self.entry_widgets[i].base:set_bg('#334455')
+            self.entry_widgets[i].base:set_bg(self.bg_normal)
             entry:unhover()
         end
     end

@@ -1,13 +1,14 @@
 local wibox = require ('wibox')
+local beautiful = require ('beautiful')
 
 local awful = require('awful')
 
-local proto = require('luminous.proto')
-local generator = require('luminous.generator')
-local entry = require('luminous.entry')
-local fuzzy = require('luminous.fuzzy')
+local proto = require('muggy.proto')
+local generator = require('muggy.generator')
+local entry = require('muggy.entry')
+local fuzzy = require('muggy.fuzzy')
 
-local common = require('luminous.common')
+local common = require('muggy.common')
 
 
 local shell = { mt = {} }
@@ -15,6 +16,9 @@ local shell_entry = { mt = {} }
 
 
 function shell_entry:new(command_name, ...)
+    local theme = beautiful.get()
+    self.hl_color = theme.lighthouse_hl_color or
+                    '#00ffff'
     proto.super(common.text_entry, self, command_name, ...)
     self.command_name = command_name
 end
@@ -25,7 +29,7 @@ function shell_entry:process(query)
     if is_match then
         local widget_markup = ''
         if last_match > 0 then
-            widget_markup = widget_markup .. '<span fgcolor="#00ffff">'
+            widget_markup = widget_markup .. '<span fgcolor="' .. self.hl_color .. '">'
             widget_markup = widget_markup .. self.command_name:sub(1, last_match)
             widget_markup = widget_markup .. '</span>'
         end

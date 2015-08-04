@@ -1,7 +1,7 @@
 local wibox = require ('wibox')
 
-local proto = require('luminous.proto')
-local entry = require('luminous.entry')
+local proto = require('muggy.proto')
+local entry = require('muggy.entry')
 
 local text_entry = { mt = {} }
 

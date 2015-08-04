@@ -1,5 +1,5 @@
-proto = require('luminous.proto')
-heap = require('luminous.heap')
+proto = require('muggy.proto')
+heap = require('muggy.heap')
 
 local generator = { mt = {} }
 

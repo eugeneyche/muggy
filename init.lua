@@ -1,3 +1,3 @@
 return {
-    lighthouse = require("luminous.lighthouse")
+    lighthouse = require("muggy.lighthouse")
 }

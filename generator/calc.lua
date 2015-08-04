@@ -1,10 +1,10 @@
 local wibox = require ('wibox')
 
-local proto = require('luminous.proto')
-local generator = require('luminous.generator')
-local entry = require('luminous.entry')
+local proto = require('muggy.proto')
+local generator = require('muggy.generator')
+local entry = require('muggy.entry')
 
-local common = require('luminous.common')
+local common = require('muggy.common')
 
 
 local calc = { mt = {} }

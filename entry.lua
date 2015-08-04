@@ -1,4 +1,4 @@
-local proto = require('luminous.proto')
+local proto = require('muggy.proto')
 
 
 entry = { mt = {} }

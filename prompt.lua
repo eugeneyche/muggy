@@ -5,16 +5,23 @@ local capi = {
 }
 
 local awful = require("awful")
-local theme = require("beautiful")
+local beautiful = require("beautiful")
 local wibox = require("wibox")
 
-local proto = require('luminous.proto')
+local proto = require('muggy.proto')
 
 
 local prompt = { mt = {} }
 
 
 function prompt:new(...)
+    local theme = beautiful.get()
+    self.prompt_color = theme.lighthouse_prompt_color or
+                        '#ffff00'
+    self.hint_prompt_color = theme.lighthouse_hint_prompt_color or
+                             '#00ff00'
+    self.cursor_color = theme.lighthouse_cursor_color or
+                        '#00ffff'
     local tb = wibox.widget.textbox()
     local m = wibox.layout.margin(tb, 4, 4, 4, 4)
     local bgb = wibox.widget.background(m)
@@ -130,14 +137,16 @@ end
 
 function prompt:show()
     if self.hint then
-        local prompt_markup = '<span fgcolor="#ff00ff">>>> </span>' .. self.hint
+        local prompt_markup = '<span fgcolor="' .. self.hint_prompt_color .. 
+                              '">> </span>' .. self.hint
         self.textbox:set_markup(prompt_markup)
         return
     end
-    local prompt_markup = '<span fgcolor="#ffff00">>>> </span>'
+    local prompt_markup = '<span fgcolor="' .. self.prompt_color .. 
+                          '">> </span>'
     local cursor_char = '_'
     local function cursor_highlight(c)
-        return '<span fgcolor="#ff0000">' .. c .. '</span>'
+        return '<span fgcolor="' .. self.cursor_color  .. '">' .. c .. '</span>'
     end
     local query_markup = ''
     if self.cursor > 1 then

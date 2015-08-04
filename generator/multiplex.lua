@@ -1,11 +1,12 @@
 local wibox = require ('wibox')
+local beautiful = require('beautiful')
 
-local proto = require('luminous.proto')
-local generator = require('luminous.generator')
-local entry = require('luminous.entry')
-local fuzzy = require('luminous.fuzzy')
+local proto = require('muggy.proto')
+local generator = require('muggy.generator')
+local entry = require('muggy.entry')
+local fuzzy = require('muggy.fuzzy')
 
-local common = require('luminous.common')
+local common = require('muggy.common')
 
 
 local multiplex = { mt = {} }
@@ -52,6 +53,9 @@ setmetatable(multiplex_subentry, multiplex_subentry.mt)
 
 
 function multiplex_mode_entry:new(name, generator, ...)
+    local theme = beautiful.get()
+    self.hl_color = theme.lighthouse_hl_color or
+                    '#00ffff'
     proto.super(common.text_entry, self, name, ...)
     self.mode_name = name
     self.generator = generator
@@ -68,7 +72,7 @@ function multiplex_mode_entry:process(query)
     if is_match then
         local widget_markup = ''
         if last_match > 0 then
-            widget_markup = widget_markup .. '<span fgcolor="#00ffff">'
+            widget_markup = widget_markup .. '<span fgcolor="' .. self.hl_color .. '">'
             widget_markup = widget_markup .. self.mode_name:sub(1, last_match)
             widget_markup = widget_markup .. '</span>'
         end

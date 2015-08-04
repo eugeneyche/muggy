@@ -6,24 +6,34 @@ local capi = {
 
 local awful = require('awful')
 local common = require('awful.widget.common')
-local theme = require('beautiful')
+local beautiful = require('beautiful')
 local wibox = require ('wibox')
 local keygrabber = require('awful.keygrabber')
 
-local proto = require('luminous.proto')
+local proto = require('muggy.proto')
 
-local prompt = require('luminous.prompt')
-local entry_list = require('luminous.entry_list')
+local prompt = require('muggy.prompt')
+local entry_list = require('muggy.entry_list')
 
-local multiplex = require('luminous.generator.multiplex')
-local shell = require('luminous.generator.shell')
-local calc = require('luminous.generator.calc')
-
+local multiplex = require('muggy.generator.multiplex')
+local shell = require('muggy.generator.shell')
+local calc = require('muggy.generator.calc')
 
 local lighthouse = { mt = {} }
 
 
 function lighthouse:new(...)
+    local theme = beautiful.get()
+    self.fg = theme.lighthouse_fg or
+              theme.fg_normal
+    self.bg = theme.lighthouse_bg or
+              theme.bg_normal
+    self.border_color = theme.lighthouse_border_color or
+                        theme.border_focus or
+                        '#ff0000'
+    self.border_width = theme.lighthouse_border_width or 
+                        theme.border_width or 
+                        1
     self.prompt = prompt()
     self.entry_list = entry_list()
     local layout = wibox.layout.fixed.vertical()
@@ -32,8 +42,10 @@ function lighthouse:new(...)
     self.grabber = nil
     self.wibox = wibox({
         ontop=true,
-        border_width=1,
-        border_color='#ff0000'
+        fg=self.fg,
+        bg=self.bg,
+        border_width=self.border_width,
+        border_color=self.border_color
     })
     self.generator = multiplex()
     self.generator:add_mode('sh', shell())
@@ -71,7 +83,7 @@ function lighthouse:resize()
     local scr = capi.mouse.screen 
     local scrgeom = capi.screen[scr].workarea
     local fixed_width = 480
-    local fixed_offset = 200
+    local fixed_offset = scrgeom.height / 3
     local remaining_height = scrgeom.height - fixed_offset
     local _, prompt_height = self.prompt.base:fit(
             fixed_width, remaining_height)
