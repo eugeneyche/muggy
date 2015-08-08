@@ -149,7 +149,7 @@ end
 function prompt:show()
     if self.hint then
         local prompt_markup = '<span fgcolor="' .. self.hint_prompt_color .. 
-                              '">> </span>' .. self.hint
+                              '">> </span>' .. common.pango_safe_text(self.hint)
         self.textbox:set_markup(prompt_markup)
         return
     end
