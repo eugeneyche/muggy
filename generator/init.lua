@@ -12,8 +12,10 @@ local generator = { mt = {} }
 
 
 function generator:new(...)
-    self.max_entries = 15 * 4
-    self.result = {}
+    self.prev_query = nil
+    self.prev_entries = {}
+    self.prev_entry_generator = nil
+    self.entry_limit = 60
 end
 
 
@@ -28,23 +30,41 @@ function generator:generate_entries(query) end
 function generator:fallback_execute(query) end
 
 
-function generator:get_entries(query)
-    local gen_entries = coroutine.wrap(self.generate_entries)
+function generator:get_entries(query, limit)
+    limit = limit or self.entry_limit
+    local entry_generator  = coroutine.create(function () 
+        self:generate_entries(query) 
+    end)
     local entry_heap = {}
-    while true do
-        local entry, score = gen_entries(self, query)
-        if not entry then break end
+    while coroutine.status(entry_generator) ~= 'dead' do
+        local st, entry, score = coroutine.resume(entry_generator)
+        if not st then break end
         if entry and type(score) == 'number' then
             heap.push(entry_heap, entry, score)
-            if #entry_heap >= self.max_entries then break end
+            if #entry_heap >= limit then break end
         end
     end
-    self.result = {}
+    self.prev_query = query
+    self.prev_entries = {}
+    self.prev_entry_generator = entry_generator
     while #entry_heap > 0 do
         local entry = heap.pop(entry_heap)
-        table.insert(self.result, entry)
+        table.insert(self.prev_entries, entry)
     end
-    return self.result
+    return self.prev_entries
+end
+
+
+function generator:flush_entries()
+    if not self.prev_entry_generator then return end
+    local entry_generator = self.prev_entry_generator
+    while coroutine.status(entry_generator) ~= 'dead' do
+        local st, entry, score = coroutine.resume(entry_generator)
+        if not st then break end
+        if entry and type(score) == 'number' then
+            table.insert(self.prev_entries, entry)
+        end
+    end
 end
 
 

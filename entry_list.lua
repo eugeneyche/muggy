@@ -152,6 +152,7 @@ function entry_list:show()
     end
     for i=1,shown_entries do
         local entry = self.entry_values[skipped_entries + i]
+        entry:show()
         self.entry_widgets[i].base:set_widget(entry:get_widget())
         if focus_entry and focus_entry == i then
             self.entry_widgets[i].base:set_bg(self.bg_focus)

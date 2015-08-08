@@ -46,6 +46,11 @@ function multiplex_subentry:hint_prompt()
 end
 
 
+function multiplex_subentry:show()
+    self.subentry:show()
+end
+
+
 function multiplex_subentry:execute()
     self.subentry:execute()
 end
@@ -61,9 +66,9 @@ setmetatable(multiplex_subentry, multiplex_subentry.mt)
 
 function multiplex_mode_entry:new(name, generator, ...)
     local theme = beautiful.get()
-    self.hl_color = theme.lighthouse_hl_color or
+    local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
-    proto.super(common.text_entry, self, name, ...)
+    proto.super(common.hl_text_entry, self, name, hl_color, ...)
     self.mode_name = name
     self.generator = generator
 end
@@ -75,19 +80,8 @@ function multiplex_mode_entry:process(query)
     if mode == self.mode_name and subquery then
         return score, subquery
     end
-    local is_match, score, _, _, last_match = fuzzy.match(self.mode_name, mode)
-    if is_match then
-        local widget_markup = ''
-        if last_match > 0 then
-            widget_markup = widget_markup .. '<span fgcolor="' .. self.hl_color .. '">'
-            widget_markup = widget_markup .. self.mode_name:sub(1, last_match)
-            widget_markup = widget_markup .. '</span>'
-        end
-        if last_match < self.mode_name:len() then
-            widget_markup = widget_markup .. self.mode_name:sub(last_match + 1)
-        end
-        self.textbox:set_markup(widget_markup)
-    end
+    local is_match, score, _, start_index, end_index = fuzzy.match(self.mode_name, mode)
+    self:hl_range(start_index, end_index)
     return score
 end
 
@@ -135,6 +129,12 @@ function multiplex:generate_entries(query)
             self:expand_mode(mode, subquery)
             return
         end
+    end
+    local use_prev_modes = self.prev_query and fuzzy.match(query, self.prev_query)
+    local modes = self.modes
+    if use_prev_modes then
+        self:flush_entries()
+        modes = self.prev_entries
     end
     for _,mode in ipairs(self.modes) do
         local score = mode:process(query)

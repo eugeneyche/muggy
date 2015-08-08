@@ -24,27 +24,16 @@ local shell_entry = { mt = {} }
 
 function shell_entry:new(command_name, ...)
     local theme = beautiful.get()
-    self.hl_color = theme.lighthouse_hl_color or
+    local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
-    proto.super(common.text_entry, self, command_name, ...)
+    proto.super(common.hl_text_entry, self, command_name, hl_color, ...)
     self.command_name = command_name
 end
 
 
 function shell_entry:process(query)
-    local is_match, score, _, _, last_match = fuzzy.match(self.command_name, query)
-    if is_match then
-        local widget_markup = ''
-        if last_match > 0 then
-            widget_markup = widget_markup .. '<span fgcolor="' .. self.hl_color .. '">'
-            widget_markup = widget_markup .. self.command_name:sub(1, last_match)
-            widget_markup = widget_markup .. '</span>'
-        end
-        if last_match < self.command_name:len() then
-            widget_markup = widget_markup .. self.command_name:sub(last_match + 1)
-        end
-        self.textbox:set_markup(widget_markup)
-    end
+    local is_match, score, _, start_index, end_index = fuzzy.match(self.command_name, query)
+    self:hl_range(start_index, end_index)
     return score
 end
 
@@ -82,7 +71,13 @@ end
 
 
 function shell:generate_entries(query)
-    for _,entry in ipairs(self.entries) do
+    local entries = self.entries
+    local use_prev_entries = self.prev_query and fuzzy.match(query, self.prev_query)
+    if use_prev_entries then
+        self:flush_entries()
+        entries = self.prev_entries
+    end
+    for _,entry in ipairs(entries) do
         local score = entry:process(query)
         if score then
             self:yield_entry(entry, score)

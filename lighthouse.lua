@@ -90,7 +90,8 @@ function lighthouse:resize()
     local scr = capi.mouse.screen 
     local scrgeom = capi.screen[scr].workarea
     local fixed_width = 480
-    local fixed_offset = scrgeom.height / 3
+    local expected_height = 300
+    local fixed_offset = scrgeom.height / 2 - expected_height / 2
     local remaining_height = scrgeom.height - fixed_offset
     local _, prompt_height = self.prompt.base:fit(
             fixed_width, remaining_height)

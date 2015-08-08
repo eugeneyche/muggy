@@ -24,6 +24,9 @@ function entry:hint_prompt()
 end
 
 
+function entry:show() end
+
+
 function entry:hover() end
 
 
