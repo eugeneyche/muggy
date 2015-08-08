@@ -19,15 +19,23 @@ local fuzzy = require('muggy.fuzzy')
 local common = require('muggy.common')
 
 
-local app = { mt = {} }
-local app_entry = { mt = {} }
+local app_entry = { 
+    super = common.hl_basic_entry,
+    mt = {}
+}
+
+
+local app = { 
+    super = generator,
+    mt = {} 
+}
 
 
 function app_entry:new(app_name, app_command, app_icon, ...)
     local theme = beautiful.get()
     local hl_color = theme.lighthouse_hl_color or
-                    '#00ffff'
-    proto.super(common.hl_basic_entry, self, app_name, hl_color, app_icon, ...)
+                     '#00ffff'
+    proto.super(self):new(app_name, hl_color, app_icon, ...)
     self.app_name = app_name
     self.app_command = app_command
     self.app_icon = app_icon
@@ -60,7 +68,7 @@ setmetatable(app_entry, app_entry.mt)
 
 
 function app:new(...)
-    proto.super(generator, self, ...)
+    proto.super(self):new(...)
     self.entries = {}
     apps = menu_gen.generate()
     for _, app in ipairs(apps) do
@@ -71,9 +79,7 @@ end
 
 
 function app:generate_entries(query)
-    if not query or query:len() == 0 then
-        return
-    end
+    if not query then return end
     local entries = self.entries
     local use_prev_entries = self.prev_query and fuzzy.match(query, self.prev_query)
     if use_prev_entries then

@@ -13,13 +13,21 @@ local generator = require('muggy.generator')
 local entry = require('muggy.entry')
 
 
-local calc = { mt = {} }
-local calc_entry = { mt = {} }
+local calc_entry = { 
+    super = common.basic_entry,
+    mt = {} 
+}
+
+
+local calc = {
+    super = generator,
+    mt = {} 
+}
 
 
 function calc_entry:new(calc, input, result,...)
     local widget_markup = ''
-    proto.super(common.basic_entry, self, ...)
+    proto.super(self):new(...)
     self.input = input
     self.result = result
     self.textbox:set_markup(widget_markup)
@@ -56,7 +64,7 @@ setmetatable(calc_entry, calc_entry.mt)
 
 
 function calc:new(...)
-    proto.super(generator, self, ...)
+    proto.super(self):new(...)
     self.max_history = 10
     self.history = {}
 end

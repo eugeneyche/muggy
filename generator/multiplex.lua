@@ -16,13 +16,26 @@ local common = require('muggy.common')
 local generator = require('muggy.generator')
 
 
-local multiplex = { mt = {} }
-local multiplex_mode_entry = { mt = {} }
-local multiplex_subentry = { mt = {} }
+local multiplex = { 
+    super = generator,
+    mt = {} 
+}
+
+
+local multiplex_mode_entry = { 
+    super = common.hl_basic_entry,
+    mt = {} 
+}
+
+
+local multiplex_subentry = { 
+    super = entry,
+    mt = {} 
+}
 
 
 function multiplex_subentry:new(mode, subentry, ...)
-    proto.super(entry, self, ...)
+    proto.super(self):new(...)
     self.mode = mode
     self.subentry = subentry
 end
@@ -68,7 +81,8 @@ function multiplex_mode_entry:new(name, generator, ...)
     local theme = beautiful.get()
     local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
-    proto.super(common.hl_basic_entry, self, name, hl_color, ...)
+    proto.super(self):new(name, hl_color, ...)
+
     self.mode_name = name
     self.generator = generator
 end
@@ -100,13 +114,13 @@ setmetatable(multiplex_mode_entry, multiplex_mode_entry.mt)
 
 
 function multiplex:new(...)
-    proto.super(generator, self, ...)
+    proto.super(self):new(...)
     self.modes = {}
 end
 
 
 function multiplex:refresh()
-    for _,mode in ipairs(self.modes) do
+    for _, mode in ipairs(self.modes) do
         mode.generator:refresh()
     end
 end

@@ -18,15 +18,23 @@ local fuzzy = require('muggy.fuzzy')
 local common = require('muggy.common')
 
 
-local shell = { mt = {} }
-local shell_entry = { mt = {} }
+local shell_entry = { 
+    super = common.hl_basic_entry, 
+    mt = {} 
+}
+
+
+local shell = { 
+    super = generator,
+    mt = {} 
+}
 
 
 function shell_entry:new(command_name, ...)
     local theme = beautiful.get()
     local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
-    proto.super(common.hl_basic_entry, self, command_name, hl_color, ...)
+    proto.super(self):new(command_name, hl_color, ...)
     self.command_name = command_name
 end
 
@@ -57,7 +65,7 @@ setmetatable(shell_entry, shell_entry.mt)
 
 
 function shell:new(...)
-    proto.super(generator, self, ...)
+    proto.super(self):new(...)
     self.entries = {}
     proc, err =  io.popen('compgen -c')
     if proc then
@@ -71,9 +79,7 @@ end
 
 
 function shell:generate_entries(query)
-    if not query or query:len() == 0 then
-        return
-    end
+    if not query then return end
     local entries = self.entries
     local use_prev_entries = self.prev_query and fuzzy.match(query, self.prev_query)
     if use_prev_entries then

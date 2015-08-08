@@ -13,8 +13,17 @@ local entry = require('muggy.entry')
 
 local common = {}
 
-common.basic_entry = { mt = {} }
-common.hl_basic_entry = { mt = {} }
+
+common.basic_entry = { 
+    super = entry,
+    mt = {} 
+}
+
+
+common.hl_basic_entry = { 
+    super = common.basic_entry,
+    mt = {} 
+}
 
 
 function common.pango_safe_text(str)
@@ -28,7 +37,7 @@ end
 function common.basic_entry:new(text, icon, ...)
     local theme = beautiful.get()
 
-    proto.super(entry, self, ...)
+    proto.super(self):new(...)
     self.text = text
     self.textbox = wibox.widget.textbox()
 
@@ -71,7 +80,7 @@ setmetatable(common.basic_entry, common.basic_entry.mt)
 
 
 function common.hl_basic_entry:new(text, hl_color, ...)
-    proto.super(common.basic_entry, self, text, ...)
+    proto.super(self):new(text, ...)
     self.hl_color = hl_color
     self.hl_start_index = nil
     self.hl_end_index = nil

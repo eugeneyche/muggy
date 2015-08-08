@@ -18,15 +18,23 @@ local fuzzy = require('muggy.fuzzy')
 local common = require('muggy.common')
 
 
-local kill = { mt = {} }
-local kill_entry = { mt = {} }
+local kill_entry = { 
+    super = common.hl_basic_entry,
+    mt = {} 
+}
+
+
+local kill = { 
+    super = generator,
+    mt = {} 
+}
 
 
 function kill_entry:new(command_name, ...)
     local theme = beautiful.get()
     local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
-    proto.super(common.hl_basic_entry, self, command_name, hl_color, ...)
+    proto.super(self):new(command_name, hl_color, ...)
     self.command_name = command_name
 end
 
@@ -57,7 +65,7 @@ setmetatable(kill_entry, kill_entry.mt)
 
 
 function kill:new(...)
-    proto.super(generator, self, ...)
+    proto.super(self):new(...)
     self.entries = {}
 end
 
