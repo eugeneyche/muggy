@@ -1,8 +1,8 @@
--- muggy.generator.shell
+-- muggy.generator.kill
 
 --
--- This file contains the shell generator, which allows the user to
--- auto-complete a shell entry with fuzzy search.
+-- This file contains the kill generator, which allows the user to
+-- kill current processes
 --
 
 local wibox = require ('wibox')
@@ -18,11 +18,11 @@ local fuzzy = require('muggy.fuzzy')
 local common = require('muggy.common')
 
 
-local shell = { mt = {} }
-local shell_entry = { mt = {} }
+local kill = { mt = {} }
+local kill_entry = { mt = {} }
 
 
-function shell_entry:new(command_name, ...)
+function kill_entry:new(command_name, ...)
     local theme = beautiful.get()
     local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
@@ -31,56 +31,63 @@ function shell_entry:new(command_name, ...)
 end
 
 
-function shell_entry:process(query)
+function kill_entry:process(query)
     local is_match, score, _, start_index, end_index = fuzzy.match(self.command_name, query)
     self:hl_range(start_index, end_index)
     return score
 end
 
 
-function shell_entry:hint_prompt()
+function kill_entry:hint_prompt()
     return self.command_name
 end
 
 
-function shell_entry:execute()
-    awful.util.spawn(self.command_name)
+function kill_entry:execute()
+    awful.util.spawn('pkill -9 ' .. self.command_name, false)
 end
 
 
-function shell_entry.mt:__call(...)
-    return proto.new(shell_entry, ...)
+function kill_entry.mt:__call(...)
+    return proto.new(kill_entry, ...)
 end
 
 
-setmetatable(shell_entry, shell_entry.mt)
+setmetatable(kill_entry, kill_entry.mt)
 
 
-function shell:new(...)
+function kill:new(...)
     proto.super(generator, self, ...)
     self.entries = {}
-    proc, err =  io.popen('compgen -c')
+end
+
+
+function kill:refresh()
+    proc, err =  io.popen('ps -u $USER -o comm=')
+    local comms = {}
     if proc then
-        for command_name in proc:lines() do
-            local entry = shell_entry(command_name)
-            table.insert(self.entries, entry)
+        for comm in proc:lines() do
+            comms[comm] = true
         end
         proc.close()
     end
+    self.entries = {}
+    comms['ps'] = false
+    for comm, valid in pairs(comms) do
+        local entry = kill_entry(comm)
+        table.insert(self.entries, entry)
+    end
 end
 
 
-function shell:generate_entries(query)
-    if not query or query:len() == 0 then
-        return
-    end
+function kill:generate_entries(query)
     local entries = self.entries
     local use_prev_entries = self.prev_query and fuzzy.match(query, self.prev_query)
     if use_prev_entries then
         self:flush_entries()
         entries = self.prev_entries
     end
-    for _, entry in ipairs(entries) do
+    for _,entry in ipairs(entries) do
         local score = entry:process(query)
         if score then
             self:yield_entry(entry, score)
@@ -90,13 +97,13 @@ end
 
 
 function generator:fallback_execute(query) 
-    awful.util.spawn(query)
+    awful.util.spawn('pkill -9 ' .. query, false)
 end
 
 
-function shell.mt:__call(...)
-    return proto.new(shell, ...)
+function kill.mt:__call(...)
+    return proto.new(kill, ...)
 end
 
 
-return setmetatable(shell, shell.mt)
+return setmetatable(kill, kill.mt)

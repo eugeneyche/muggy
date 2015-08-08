@@ -24,6 +24,9 @@ function generator:yield_entry(entry, score)
 end
 
 
+function generator:refresh() end
+
+
 function generator:generate_entries(query) end
 
 

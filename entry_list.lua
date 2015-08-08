@@ -94,6 +94,14 @@ function entry_list:cursor_reset()
     self:show()
 end
 
+function entry_list:cursor_first_hint()
+    if self.cursor == 0 then
+        self.cursor = 1
+    end
+    self:_check_cursor()
+    self:show()
+end
+
 
 function entry_list:cursor_up()
     self.cursor = self.cursor - 1

@@ -22,7 +22,9 @@ local prompt = require('muggy.prompt')
 local entry_list = require('muggy.entry_list')
 
 local multiplex = require('muggy.generator.multiplex')
+local app = require('muggy.generator.app')
 local shell = require('muggy.generator.shell')
+local kill = require('muggy.generator.kill')
 local calc = require('muggy.generator.calc')
 
 
@@ -55,7 +57,9 @@ function lighthouse:new(...)
         border_color=self.border_color
     })
     self.generator = multiplex()
-    self.generator:add_mode('sh', shell())
+    self.generator:add_mode('app' , app())
+    self.generator:add_mode('shell'  , shell())
+    self.generator:add_mode('kill', kill())
     self.generator:add_mode('calc', calc())
     self.wibox:set_widget(layout)
     self.prompt:on_query_change(function(...)
@@ -109,7 +113,7 @@ end
 
 
 function lighthouse:run()
-    self:show()
+    self.generator:refresh()
     self:update_entries()
     if self.grabber then
         keygrabber.stop(self.grabber)
@@ -118,6 +122,7 @@ function lighthouse:run()
         function(modifiers, key, event)
             self:on_key(modifiers, key, event)
         end)
+    self:show()
 end
 
 
@@ -156,15 +161,15 @@ function lighthouse:on_key(modifiers, key, event)
     if mod.Control and key == 'e' then
         self.prompt:cursor_end()
     end
-    if      (mod.Control and key == 'j') or 
-            (not mod.Control and not mod.Shift and key == 'Tab') 
-    then
+    if mod.Control and key == 'j' then
         self.entry_list:cursor_down()
     end
-    if      (mod.Control and key == 'k') or
-            (not mod.Control and mod.Shift and key == 'Tab')
-    then
+    if mod.Control and key == 'k' then
         self.entry_list:cursor_up()
+    end
+    if not mod.Control and not mod.Shift and key == 'Tab' then
+        self.entry_list:cursor_first_hint()
+        self.prompt:finalize_hint()
     end
     if not mod.Control and key == 'BackSpace' then
         self.prompt:backspace()

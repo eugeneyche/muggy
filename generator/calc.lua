@@ -19,12 +19,21 @@ local calc_entry = { mt = {} }
 
 function calc_entry:new(calc, input, result,...)
     local widget_markup = ''
-    widget_markup = widget_markup .. '<span fgcolor="#ff8800">' .. input .. '</span>'
-    widget_markup = widget_markup .. '\n= '
-    widget_markup = widget_markup .. '<span fgcolor="#88ff00">' .. result .. '</span>'
-    proto.super(common.text_entry, self, widget_markup, ...)
+    proto.super(common.basic_entry, self, ...)
+    self.input = input
+    self.result = result
+    self.textbox:set_markup(widget_markup)
     self.calc = calc
     self.result = result
+end
+
+
+function calc_entry:show()
+    local widget_markup = ''
+    widget_markup = widget_markup .. '<span fgcolor="#ff8800">' .. self.input .. '</span>'
+    widget_markup = widget_markup .. '\n= '
+    widget_markup = widget_markup .. '<span fgcolor="#88ff00">' .. self.result .. '</span>'
+    self.textbox:set_markup(widget_markup)
 end
 
 

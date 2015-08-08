@@ -15,6 +15,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 
 local proto = require('muggy.proto')
+local common = require('muggy.common')
 
 
 local prompt = { mt = {} }
@@ -28,8 +29,12 @@ function prompt:new(...)
                              '#00ff00'
     self.cursor_color = theme.lighthouse_cursor_color or
                         '#00ffff'
+
+    local target_height = theme.menu_height or beautiful.get_font_height(theme.font) * 1.5
+    local padding = (target_height - beautiful.get_font_height(theme.font)) / 2
+
     local tb = wibox.widget.textbox()
-    local m = wibox.layout.margin(tb, 4, 4, 4, 4)
+    local m = wibox.layout.margin(tb, 4, 4, padding, padding)
     local bgb = wibox.widget.background(m)
     self.textbox = tb
     self.base = bgb
@@ -156,17 +161,17 @@ function prompt:show()
     end
     local query_markup = ''
     if self.cursor > 1 then
-        query_markup = self.query:sub(1, self.cursor - 1)
+        query_markup = common.pango_safe_text(self.query:sub(1, self.cursor - 1))
     end
     if self.cursor <= self.query:len() then
         if self.query:sub(self.cursor, self.cursor) == ' ' then
             query_markup = query_markup .. cursor_highlight(cursor_char)
         else
             query_markup = query_markup .. cursor_highlight(
-                    self.query:sub(self.cursor, self.cursor))
+                    common.pango_safe_text(self.query:sub(self.cursor, self.cursor)))
         end
         if self.cursor < self.query:len() then
-            query_markup = query_markup .. self.query:sub(self.cursor + 1)
+            query_markup = query_markup .. common.pango_safe_text(self.query:sub(self.cursor + 1))
         end
     else
         query_markup = query_markup .. cursor_highlight(cursor_char)

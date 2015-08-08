@@ -68,7 +68,7 @@ function multiplex_mode_entry:new(name, generator, ...)
     local theme = beautiful.get()
     local hl_color = theme.lighthouse_hl_color or
                     '#00ffff'
-    proto.super(common.hl_text_entry, self, name, hl_color, ...)
+    proto.super(common.hl_basic_entry, self, name, hl_color, ...)
     self.mode_name = name
     self.generator = generator
 end
@@ -105,6 +105,13 @@ function multiplex:new(...)
 end
 
 
+function multiplex:refresh()
+    for _,mode in ipairs(self.modes) do
+        mode.generator:refresh()
+    end
+end
+
+
 function multiplex:add_mode(name, generator)
     table.insert(self.modes, multiplex_mode_entry(name, generator))
 end
@@ -136,9 +143,13 @@ function multiplex:generate_entries(query)
         self:flush_entries()
         modes = self.prev_entries
     end
-    for _,mode in ipairs(self.modes) do
+    for i, mode in ipairs(self.modes) do
         local score = mode:process(query)
-        self:yield_entry(mode, score)
+        if query:len() == 0 then
+            self:yield_entry(mode, -i)
+        else
+            self:yield_entry(mode, score)
+        end
     end
 end
 

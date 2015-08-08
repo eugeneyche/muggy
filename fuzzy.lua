@@ -18,12 +18,17 @@ local end_falloff = 0.5
 local end_max = 3
 
 
-function fuzzy.match(str, expr)
+function fuzzy.match(str, expr, ignore_case)
     local is_match = false
     local score = 0
     local matches = {}
     local first_match = 0
     local last_match = 0
+    
+    if ignore_case then
+        str = str:upper()
+        expr = expr:upper()
+    end
 
     local ei = 1
     for i=1,str:len() do
