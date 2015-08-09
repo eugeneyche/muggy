@@ -6,6 +6,7 @@
 
 return {
 
+    widget = require('muggy.widget'),
     lighthouse = require('muggy.lighthouse')
 
 }

@@ -8,7 +8,8 @@ local wibox = require ('wibox')
 local beautiful = require('beautiful')
 
 local proto = require('muggy.proto')
-local entry = require('muggy.entry')
+
+local entry = require('muggy.lighthouse.entry')
 
 
 local common = {}

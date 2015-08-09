@@ -6,11 +6,11 @@
 
 local wibox = require ('wibox')
 
-local common = require('muggy.common')
-
 local proto = require('muggy.proto')
-local generator = require('muggy.generator')
-local entry = require('muggy.entry')
+
+local common = require('muggy.lighthouse.common')
+local generator = require('muggy.lighthouse.generator')
+local entry = require('muggy.lighthouse.entry')
 
 
 local calc_entry = { 

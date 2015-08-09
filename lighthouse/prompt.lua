@@ -15,7 +15,8 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 
 local proto = require('muggy.proto')
-local common = require('muggy.common')
+
+local common = require('muggy.lighthouse.common')
 
 
 local prompt = { mt = {} }

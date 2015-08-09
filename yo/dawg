@@ -13,7 +13,7 @@ function yo_dawg() {
     echo 'yo/dawg.'
 }
 
-RC_LUA=~/.config/awesome/rc.test.lua
+RC_LUA=~/.config/awesome/rc.lua
 test -f $RC_LUA || /bin/cp /etc/xdg/awesome/rc.lua $RC_LUA
 
 yo_dawg

@@ -18,14 +18,15 @@ local keygrabber = require('awful.keygrabber')
 local beautiful = require('beautiful')
 
 local proto = require('muggy.proto')
-local prompt = require('muggy.prompt')
-local entry_list = require('muggy.entry_list')
 
-local multiplex = require('muggy.generator.multiplex')
-local app = require('muggy.generator.app')
-local shell = require('muggy.generator.shell')
-local kill = require('muggy.generator.kill')
-local calc = require('muggy.generator.calc')
+local prompt = require('muggy.lighthouse.prompt')
+local entry_list = require('muggy.lighthouse.entry_list')
+
+local multiplex = require('muggy.lighthouse.generator.multiplex')
+local app = require('muggy.lighthouse.generator.app')
+local shell = require('muggy.lighthouse.generator.shell')
+local kill = require('muggy.lighthouse.generator.kill')
+local calc = require('muggy.lighthouse.generator.calc')
 
 
 local lighthouse = { mt = {} }

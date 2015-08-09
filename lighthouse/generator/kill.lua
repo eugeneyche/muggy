@@ -11,11 +11,12 @@ local beautiful = require ('beautiful')
 local awful = require('awful')
 
 local proto = require('muggy.proto')
-local generator = require('muggy.generator')
-local entry = require('muggy.entry')
 local fuzzy = require('muggy.fuzzy')
 
-local common = require('muggy.common')
+local generator = require('muggy.lighthouse.generator')
+local entry = require('muggy.lighthouse.entry')
+
+local common = require('muggy.lighthouse.common')
 
 
 local kill_entry = { 
